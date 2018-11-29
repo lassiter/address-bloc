@@ -1,4 +1,4 @@
-require 'bloc_record/base'
+require 'miniORM/base'
 
 class Entry < MiniORM::Base
 
