@@ -1,4 +1,4 @@
-require 'miniORM/base'
+require 'miniorm/base'
 
 class Entry < MiniORM::Base
 
