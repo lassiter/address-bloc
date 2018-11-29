@@ -1,11 +1,12 @@
 require_relative 'entry'
 require "csv"
+require 'miniorm/base'
 
-class AddressBook
+class AddressBook < MiniORM::Base
   attr_reader :entries
 
-  def initialize
-    @entries = []
+  def initialize(options={})
+    super
   end
 
   def add_entry(name, phone_number, email)
