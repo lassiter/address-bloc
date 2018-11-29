@@ -4,11 +4,12 @@ class MenuController
   attr_reader :address_book
 
   def initialize
-    @address_book = AddressBook.new
+    @address_book = AddressBook.first
   end
 
   def main_menu
     puts "Main Menu - #{address_book.entries.count} entries"
+    puts "#{@address_book.name} Address Book - #{Entry.count} entries"
     puts "1 - View all entries"
     puts "2 - Create an entry"
     puts "3 - Search for an entry"
