@@ -1,0 +1,19 @@
+PATH
+  remote: ../miniORM
+  specs:
+    miniORM (0.0.0)
+      sqlite3 (~> 1.3)
+
+GEM
+  remote: https://rubygems.org/
+  specs:
+    sqlite3 (1.3.13)
+
+PLATFORMS
+  ruby
+
+DEPENDENCIES
+  miniORM!
+
+BUNDLED WITH
+   1.16.1
