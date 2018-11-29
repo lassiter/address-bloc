@@ -7,6 +7,11 @@ PATH
 GEM
   remote: https://rubygems.org/
   specs:
+    coderay (1.1.2)
+    method_source (0.9.0)
+    pry (0.12.2)
+      coderay (~> 1.1.0)
+      method_source (~> 0.9.0)
     sqlite3 (1.3.13)
 
 PLATFORMS
@@ -14,6 +19,7 @@ PLATFORMS
 
 DEPENDENCIES
   miniORM!
+  pry
 
 BUNDLED WITH
    1.16.1

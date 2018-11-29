@@ -1,5 +1,6 @@
 require_relative '../models/address_book'
 
+
 class MenuController
   attr_reader :address_book
 
@@ -8,7 +9,6 @@ class MenuController
   end
 
   def main_menu
-    puts "Main Menu - #{address_book.entries.count} entries"
     puts "#{@address_book.name} Address Book - #{Entry.count} entries"
     puts "1 - View all entries"
     puts "2 - Create an entry"
@@ -47,7 +47,7 @@ class MenuController
   end
 
   def view_all_entries
-    address_book.entries.each do |entry|
+    Entry.all.each do |entry|
       system "clear"
       puts entry.to_s
       entry_submenu(entry)
@@ -67,7 +67,7 @@ class MenuController
     print "Email: "
     email = gets.chomp
 
-    address_book.add_entry(name, phone, email)
+    @address_book.add_entry(name, phone, email)
 
     system "clear"
     puts "New entry created"
@@ -76,7 +76,7 @@ class MenuController
   def search_entries
     print "Search by name: "
     name = gets.chomp
-    match = address_book.binary_search(name)
+    match = Entry.find_by(:name, name)
     system "clear"
     if match
       puts match.to_s
@@ -97,7 +97,7 @@ class MenuController
     end
 
     begin
-      entry_count = address_book.import_from_csv(file_name).count
+      entry_count = @address_book.import_from_csv(file_name).count
       system "clear"
       puts "#{entry_count} new entries added from #{file_name}"
     rescue
@@ -132,7 +132,7 @@ class MenuController
   end
 
   def delete_entry(entry)
-    address_book.entries.delete(entry)
+    @address_book.entries.delete(entry)
     puts "#{entry.name} has been deleted"
   end
 
