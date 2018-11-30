@@ -11,10 +11,11 @@ class MenuController
   def main_menu
     puts "#{@address_book.name} Address Book - #{Entry.count} entries"
     puts "1 - View all entries"
-    puts "2 - Create an entry"
-    puts "3 - Search for an entry"
-    puts "4 - Import entries from a CSV"
-    puts "5 - Exit"
+    puts "2 - View entries by batch"
+    puts "3 - Create an entry"
+    puts "4 - Search for an entry"
+    puts "5 - Import entries from a CSV"
+    puts "6 - Exit"
     print "Enter your selection: "
 
     selection = gets.to_i
@@ -26,17 +27,21 @@ class MenuController
         main_menu
       when 2
         system "clear"
-        create_entry
+        batch_menu
         main_menu
       when 3
         system "clear"
-        search_entries_type
+        create_entry
         main_menu
       when 4
         system "clear"
-        read_csv
+        search_entries_type
         main_menu
       when 5
+        system "clear"
+        read_csv
+        main_menu
+      when 6
         puts "Good-bye!"
         exit(0)
       else
@@ -55,6 +60,92 @@ class MenuController
 
     system "clear"
     puts "End of entries"
+  end
+
+  def batch_menu
+    puts "Batch Menu - #{Entry.count} entries"
+    puts "1 - View each entry"
+    puts "2 - View each in batch"
+    puts "4 - Exit"
+    print "Enter your selection: "
+
+    selection = gets.to_i
+
+    case selection
+      when 1
+        system "clear"
+        view_each_contact
+        main_menu
+      when 2
+        system "clear"
+        Entry.find_in_batches do |records|
+          view_contacts_in_batches(records)
+        end
+        main_menu
+      when 4
+        puts "Good-bye!"
+        exit(0)
+      else
+        system "clear"
+        puts "Sorry, that is not a valid input"
+        main_menu
+    end
+  end
+
+  def view_each_contact
+    Entry.find_each
+    puts "n - next entry"
+    puts "d - delete entry"
+    puts "e - edit this entry"
+    puts "m - return to main menu"
+
+    selection = gets.chomp
+
+    case selection
+      when "n"
+      when "d"
+        # delete_entry(entry)
+      when "e"
+        # edit_entry(entry)
+        # entry_submenu(entry)
+      when "m"
+        system "clear"
+        main_menu
+      else
+        system "clear"
+        puts "#{selection} is not a valid input"
+        # entry_submenu(entry)
+    end
+    
+  end
+  
+  def view_contacts_in_batches(records)
+    records.each do |record|
+      puts record
+      puts "n - next entry"
+      puts "d - delete entry"
+      puts "e - edit this entry"
+      puts "m - return to main menu"
+
+      selection = gets.chomp
+
+      case selection
+        when "n"
+          next
+        when "d"
+          # delete_entry(entry)
+        when "e"
+          # edit_entry(entry)
+          # entry_submenu(entry)
+        when "m"
+          system "clear"
+          main_menu
+        else
+          system "clear"
+          puts "#{selection} is not a valid input"
+          # entry_submenu(entry)
+      end
+    end
   end
 
   def create_entry
