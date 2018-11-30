@@ -30,7 +30,7 @@ class MenuController
         main_menu
       when 3
         system "clear"
-        search_entries
+        search_entries_type
         main_menu
       when 4
         system "clear"
@@ -73,7 +73,44 @@ class MenuController
     puts "New entry created"
   end
 
-  def search_entries
+  def search_entries_type
+    puts "#{@address_book.name} Address Book - #{Entry.count} entries"
+    puts "1 - Name"
+    puts "2 - Phone"
+    puts "3 - Email"
+    puts "4 - Other"
+    print "Enter your selection: "
+
+    selection = gets.to_i
+
+    case selection
+      when 1
+        system "clear"
+        search_entries_by_name
+        main_menu
+      when 2
+        system "clear"
+        search_entries_by_phone_number
+        main_menu
+      when 3
+        system "clear"
+        search_entries_by_email
+        main_menu
+      when 4
+        system "clear"
+        search_entries_by_other
+        main_menu
+      when 5
+        system "clear"
+        main_menu
+      else
+        system "clear"
+        puts "Sorry, that is not a valid input"
+        search_entries_type
+    end
+  end
+
+  def search_entries_by_name
     print "Search by name: "
     name = gets.chomp
     match = Entry.find_by(:name, name)
@@ -83,6 +120,51 @@ class MenuController
       search_submenu(match)
     else
       puts "No match found for #{name}"
+    end
+  end
+
+  def search_entries_by_phone_number
+    print "Search by phone number: "
+    number = gets.chomp
+    match = Entry.find_by_phone_number(number)
+    system "clear"
+    if match
+      puts match.to_s
+      search_submenu(match)
+    else
+      puts "No match found for #{number}"
+    end
+  end
+
+  def search_entries_by_email
+    print "Search by email: "
+    email = gets.chomp
+    match = Entry.find_by_email(email)
+    system "clear"
+    if match
+      puts match.to_s
+      search_submenu(match)
+    else
+      puts "No match found for #{email}"
+    end
+  end
+
+  def search_entries_by_other
+    print "Enter search type: "
+    sub_menu_for_search_entries_by_other(gets.chomp)
+    system "clear"
+  end
+
+  def sub_menu_for_search_entries_by_other(attribute)
+    print "Search by #{attribute}: "
+    value = gets.chomp
+    match = Entry.find_by(attribute, value)
+    system "clear"
+    if match
+      puts match.to_s
+      search_submenu(match)
+    else
+      puts "No match found for #{value}"
     end
   end
 
