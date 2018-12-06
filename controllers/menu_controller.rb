@@ -72,7 +72,7 @@ class MenuController
   end
 
   def view_all_entries
-    @address_book.entries.all.each do |entry|
+    @address_book.entries.each do |entry|
       system "clear"
       puts @address_book.entries.to_s
       entry_submenu(entry)
