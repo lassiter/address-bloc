@@ -9,7 +9,8 @@ class MenuController
   end
 
   def main_menu
-    puts "#{@address_book.name} Address Book - #{Entry.count} entries"
+    puts "#{@address_book.name} Address Book Selected\n#{@address_book.entries.count} entries"
+    puts "0 - Switch AddressBook"
     puts "1 - View all entries"
     puts "2 - View entries by batch"
     puts "3 - Create an entry"
@@ -21,6 +22,10 @@ class MenuController
     selection = gets.to_i
 
     case selection
+      when 0
+        system "clear"
+        select_address_book_menu
+        main_menu
       when 1
         system "clear"
         view_all_entries
@@ -51,10 +56,25 @@ class MenuController
     end
   end
 
+  def select_address_book_menu
+    puts "Select an Address Book:"
+    AddressBook.all.each_with_index do |address_book, index|
+      puts "#{index} - #{address_book.name}"
+    end
+
+    index = gets.chomp.to_i
+
+    @address_book = AddressBook.find(index + 1)
+    system "clear"
+    return if @address_book
+    puts "Please select a valid index"
+    select_address_book_menu
+  end
+
   def view_all_entries
-    Entry.all.each do |entry|
+    @address_book.entries.all.each do |entry|
       system "clear"
-      puts entry.to_s
+      puts @address_book.entries.to_s
       entry_submenu(entry)
     end
 
@@ -63,7 +83,7 @@ class MenuController
   end
 
   def batch_menu
-    puts "Batch Menu - #{Entry.count} entries"
+    puts "Batch Menu - #{@address_book.entries.count} entries"
     puts "1 - View each entry"
     puts "2 - View each in batch"
     puts "4 - Exit"
@@ -78,7 +98,7 @@ class MenuController
         main_menu
       when 2
         system "clear"
-        Entry.find_in_batches do |records|
+        @address_book.entries.find_in_batches do |records|
           view_contacts_in_batches(records)
         end
         main_menu
@@ -93,7 +113,7 @@ class MenuController
   end
 
   def view_each_contact
-    Entry.find_each
+    @address_book.entries.find_each
     puts "n - next entry"
     puts "d - delete entry"
     puts "e - edit this entry"
@@ -165,7 +185,7 @@ class MenuController
   end
 
   def search_entries_type
-    puts "#{@address_book.name} Address Book - #{Entry.count} entries"
+    puts "#{@address_book.name} Address Book - #{@address_book.entries.count} entries"
     puts "1 - Name"
     puts "2 - Phone"
     puts "3 - Email"
@@ -204,7 +224,7 @@ class MenuController
   def search_entries_by_name
     print "Search by name: "
     name = gets.chomp
-    match = Entry.find_by(:name, name)
+    match = @address_book.entries.find_entry(name)
     system "clear"
     if match
       puts match.to_s
@@ -217,7 +237,7 @@ class MenuController
   def search_entries_by_phone_number
     print "Search by phone number: "
     number = gets.chomp
-    match = Entry.find_by_phone_number(number)
+    match = @address_book.entries.find_by_phone_number(number)
     system "clear"
     if match
       puts match.to_s
@@ -230,7 +250,7 @@ class MenuController
   def search_entries_by_email
     print "Search by email: "
     email = gets.chomp
-    match = Entry.find_by_email(email)
+    match = @address_book.entries.find_by_email(email)
     system "clear"
     if match
       puts match.to_s
@@ -249,7 +269,7 @@ class MenuController
   def sub_menu_for_search_entries_by_other(attribute)
     print "Search by #{attribute}: "
     value = gets.chomp
-    match = Entry.find_by(attribute, value)
+    match = @address_book.entries.find_by(attribute, value)
     system "clear"
     if match
       puts match.to_s
@@ -306,7 +326,7 @@ class MenuController
 
   def delete_entry(entry)
     @address_book.entries.delete(entry)
-    puts "#{entry.name} has been deleted"
+    puts "#{@address_book.entries.name} has been deleted"
   end
 
   def edit_entry(entry)
@@ -316,9 +336,9 @@ class MenuController
     phone_number = gets.chomp
     print "Updated email: "
     email = gets.chomp
-    entry.name = name if !name.empty?
-    entry.phone_number = phone_number if !phone_number.empty?
-    entry.email = email if !email.empty?
+    @address_book.entries.name = name if !name.empty?
+    @address_book.entries.phone_number = phone_number if !phone_number.empty?
+    @address_book.entries.email = email if !email.empty?
     system "clear"
     puts "Updated entry:"
     puts entry
@@ -345,7 +365,7 @@ class MenuController
       else
         system "clear"
         puts "#{selection} is not a valid input"
-        puts entry.to_s
+        puts @address_book.entries.to_s
         search_submenu(entry)
     end
   end
