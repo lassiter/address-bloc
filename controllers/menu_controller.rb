@@ -1,4 +1,5 @@
 require_relative '../models/address_book'
+require 'pry'
 
 
 class MenuController
@@ -72,7 +73,8 @@ class MenuController
   end
 
   def view_all_entries
-    @address_book.entries.each do |entry|
+    binding.pry
+    @address_book.entries.sort {|a,b| a.name <=> b.name}.each do |entry|
       system "clear"
       puts @address_book.entries.to_s
       entry_submenu(entry)
@@ -98,7 +100,7 @@ class MenuController
         main_menu
       when 2
         system "clear"
-        @address_book.entries.find_in_batches do |records|
+        @address_book.entries.sort {|a,b| a.name <=> b.name}.find_in_batches do |records|
           view_contacts_in_batches(records)
         end
         main_menu
@@ -113,7 +115,7 @@ class MenuController
   end
 
   def view_each_contact
-    @address_book.entries.find_each
+    @address_book.entries.sort {|a,b| a.name <=> b.name}.find_each
     puts "n - next entry"
     puts "d - delete entry"
     puts "e - edit this entry"
