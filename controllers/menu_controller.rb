@@ -73,7 +73,6 @@ class MenuController
   end
 
   def view_all_entries
-    binding.pry
     @address_book.entries.sort {|a,b| a.name <=> b.name}.each do |entry|
       system "clear"
       puts @address_book.entries.to_s
