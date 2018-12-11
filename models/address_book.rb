@@ -13,7 +13,6 @@ class AddressBook < MiniORM::Base
   end
 
   def entries
-    Entry.join(comments: :guest)
     Entry.where(address_book_id: self.id)
   end
 
