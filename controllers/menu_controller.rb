@@ -17,7 +17,8 @@ class MenuController
     puts "3 - Create an entry"
     puts "4 - Search for an entry"
     puts "5 - Import entries from a CSV"
-    puts "6 - Exit"
+    puts "6 - Update Multiple Records"
+    puts "7 - Exit"
     print "Enter your selection: "
 
     selection = gets.to_i
@@ -48,6 +49,10 @@ class MenuController
         read_csv
         main_menu
       when 6
+        system "clear"
+        batch_update_menu
+        main_menu
+      when 7
         puts "Good-bye!"
         exit(0)
       else
@@ -169,6 +174,31 @@ class MenuController
     end
   end
 
+  def batch_update_menu
+    system "clear"
+    puts "enter string of ids to update \n (i.e. '1,2,3')"
+    ids = gets.chomp.split(",").map(&:to_i)
+    batch_update(ids)
+  end
+
+  def batch_update(ids)
+    updates = {}
+    Entry.find(ids).each do |user|
+      user_updates = {}
+      puts "name: #{user.name}"
+      puts "phone number: #{user.phone_number}"
+      puts "email: #{user.email}"
+      puts "New Name: "
+      user_updates[:name] = gets.chomp
+      puts "New Phone Number: "
+      user_updates[:phone_number] = gets.chomp
+      puts "New Email: "
+      user_updates[:email] = gets.chomp
+      updates.merge!(user.id => user_updates)
+    end
+    Entry.update(updates.keys, updates.values)
+  end
+
   def create_entry
     system "clear"
     puts "New AddressBloc Entry"
@@ -225,7 +255,7 @@ class MenuController
   def search_entries_by_name
     print "Search by name: "
     name = gets.chomp
-    match = @address_book.entries.find_entry(name)
+    match = @address_book.find_entry(name)
     system "clear"
     if match
       puts match.to_s
