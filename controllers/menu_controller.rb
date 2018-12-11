@@ -181,8 +181,7 @@ class MenuController
     batch_update(ids)
   end
 
-  def batch_update(ids)
-    updates = {}
+  def batch_update(ids)    
     Entry.find(ids).each do |user|
       user_updates = {}
       puts "name: #{user.name}"
