@@ -126,6 +126,7 @@ class MenuController
   def delete_menu
     puts "Delete Menu - #{@address_book.entries.count} entries"
     puts "1 - Destroy by id"
+    puts "2 - Destroy all by type"
     puts "4 - Exit"
     print "Enter your selection: "
 
@@ -138,6 +139,18 @@ class MenuController
           puts "Input ID to Delete: \n (i.e. '1' or '1,2,3')"
           entry_id_to_delete = gets.chomp
           Entry.destroy(entry_id_to_delete)
+        ensure
+          main_menu
+        end
+      when 2
+        begin
+          system "clear"
+          puts "Input type to Delete: \n (i.e. 'phone_number')"
+          entry_type_to_delete = gets.chomp
+          system "clear"
+          puts "Input value to Delete: \n (i.e. '999-999-9999')"
+          entry_value_to_delete = gets.chomp
+          Entry.destroy_all("#{entry_type_to_delete} = '#{entry_value_to_delete}'")
         ensure
           main_menu
         end
