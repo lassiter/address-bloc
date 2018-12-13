@@ -9,7 +9,7 @@ class AddressBook < MiniORM::Base
   end
 
   def add_entry(name, phone_number, email)
-    Entry.create(name: name, phone_number: phone, email: email, address_book_id: self.id)
+    Entry.create(name: name, phone_number: phone_number, email: email, address_book_id: self.id)
   end
 
   def entries

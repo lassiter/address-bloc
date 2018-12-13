@@ -18,7 +18,8 @@ class MenuController
     puts "4 - Search for an entry"
     puts "5 - Import entries from a CSV"
     puts "6 - Update Multiple Records"
-    puts "7 - Exit"
+    puts "7 - Destroy"
+    puts "8 - Exit"
     print "Enter your selection: "
 
     selection = gets.to_i
@@ -53,6 +54,10 @@ class MenuController
         batch_update_menu
         main_menu
       when 7
+        system "clear"
+        delete_menu
+        main_menu
+      when 8
         puts "Good-bye!"
         exit(0)
       else
@@ -118,6 +123,34 @@ class MenuController
     end
   end
 
+  def delete_menu
+    puts "Delete Menu - #{@address_book.entries.count} entries"
+    puts "1 - Destroy by id"
+    puts "4 - Exit"
+    print "Enter your selection: "
+
+    selection = gets.to_i
+
+    case selection
+      when 1
+        begin
+          system "clear"
+          puts "Input ID to Delete: \n (i.e. '1' or '1,2,3')"
+          entry_id_to_delete = gets.chomp
+          Entry.destroy(entry_id_to_delete)
+        ensure
+          main_menu
+        end
+      when 4
+        puts "Good-bye!"
+        exit(0)
+      else
+        system "clear"
+        puts "Sorry, that is not a valid input"
+        main_menu
+    end
+  end
+
   def view_each_contact
     @address_book.entries.sort {|a,b| a.name <=> b.name}.find_each
     puts "n - next entry"
@@ -130,17 +163,17 @@ class MenuController
     case selection
       when "n"
       when "d"
-        # delete_entry(entry)
+        delete_entry(entry)
       when "e"
-        # edit_entry(entry)
-        # entry_submenu(entry)
+        edit_entry(entry)
+        entry_submenu(entry)
       when "m"
         system "clear"
         main_menu
       else
         system "clear"
         puts "#{selection} is not a valid input"
-        # entry_submenu(entry)
+        entry_submenu(entry)
     end
     
   end
@@ -159,17 +192,17 @@ class MenuController
         when "n"
           next
         when "d"
-          # delete_entry(entry)
+          delete_entry(entry)
         when "e"
-          # edit_entry(entry)
-          # entry_submenu(entry)
+          edit_entry(entry)
+          entry_submenu(entry)
         when "m"
           system "clear"
           main_menu
         else
           system "clear"
           puts "#{selection} is not a valid input"
-          # entry_submenu(entry)
+          entry_submenu(entry)
       end
     end
   end
@@ -334,6 +367,7 @@ class MenuController
     puts "d - delete entry"
     puts "e - edit this entry"
     puts "m - return to main menu"
+    puts "s - update email"
 
     selection = gets.chomp
 
@@ -343,6 +377,9 @@ class MenuController
         delete_entry(entry)
       when "e"
         edit_entry(entry)
+        entry_submenu(entry)
+      when "s"
+        quick_email_edit_entry(entry)
         entry_submenu(entry)
       when "m"
         system "clear"
@@ -355,8 +392,8 @@ class MenuController
   end
 
   def delete_entry(entry)
-    @address_book.entries.delete(entry)
-    puts "#{@address_book.entries.name} has been deleted"
+    entry.destroy
+    puts "#{entry.name} has been deleted"
   end
 
   def edit_entry(entry)
@@ -371,7 +408,16 @@ class MenuController
     email = gets.chomp
     updates[:email] = email unless email.empty?
 
-    entry.update_attributes(updates)
+    entry.update_by(updates)
+    system "clear"
+    puts "Updated entry:"
+    puts Entry.find(entry.id)
+  end
+  
+  def quick_email_edit_entry(entry)
+    print "New Email:"
+    value = gets.chomp
+    Entry.update_email(entry.id, value)
     system "clear"
     puts "Updated entry:"
     puts Entry.find(entry.id)
@@ -381,6 +427,7 @@ class MenuController
     puts "\nd - delete entry"
     puts "e - edit this entry"
     puts "m - return to main menu"
+    puts "s - update email"
     selection = gets.chomp
 
     case selection
@@ -395,6 +442,9 @@ class MenuController
       when "m"
         system "clear"
         main_menu
+      when "s"
+        quick_email_edit_entry(entry)
+        entry_submenu(entry)
       else
         system "clear"
         puts "#{selection} is not a valid input"
