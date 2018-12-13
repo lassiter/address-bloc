@@ -1,7 +1,7 @@
 require_relative 'controllers/menu_controller'
 require 'miniorm'
  
-MiniORM.connect_to("db/address_bloc.sqlite")
+MiniORM.connect_to("db/address_bloc.sqlite", :sqlite3)
 
 menu = MenuController.new
 system "clear"

@@ -85,7 +85,8 @@ class MenuController
   def view_all_entries
     @address_book.entries.sort {|a,b| a.name <=> b.name}.each do |entry|
       system "clear"
-      puts @address_book.entries.to_s
+      puts "Address Book: #{entry.address_book.name} Entry"
+      puts entry.to_s
       entry_submenu(entry)
     end
 
